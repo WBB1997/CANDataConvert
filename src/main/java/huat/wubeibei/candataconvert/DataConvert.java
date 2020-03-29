@@ -28,12 +28,8 @@ public class DataConvert {
     private InputStream config;
 
     // 类初始化
-    public DataConvert() {
-        try {
-            this.config = new FileInputStream(new File("src/main/resources/MessageLayout.xml"));
-        }catch (FileNotFoundException f){
-            f.printStackTrace();
-        }
+    public DataConvert(InputStream inputStream) {
+        this.config = inputStream;
         initMessageMap();
         System.out.println("DataConvert Resource load success!");
     }
