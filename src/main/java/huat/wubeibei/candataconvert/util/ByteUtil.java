@@ -1,8 +1,8 @@
 package huat.wubeibei.candataconvert.util;
 
 public class ByteUtil {
-    private static final int Motorola = 0;
-    private static final int Intel = 1;
+    public static final int Motorola = 0;
+    public static final int Intel = 1;
 
     //byte转16进制
     public static String bytesToHex(byte[] bytes) {

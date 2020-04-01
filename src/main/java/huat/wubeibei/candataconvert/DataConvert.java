@@ -20,12 +20,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import static huat.wubeibei.candataconvert.util.ByteUtil.Intel;
+import static huat.wubeibei.candataconvert.util.ByteUtil.Motorola;
 import static java.util.Arrays.copyOfRange;
 
 public class DataConvert {
 
     private HashMap<String, Message> messageMap = new HashMap<>();
     private InputStream config;
+    private final static int headLength = 2;
 
     // 类初始化
     public DataConvert(InputStream inputStream) {
@@ -42,7 +45,7 @@ public class DataConvert {
             return null;
         else {
             // 构建一个Byte数组
-            int length = msg.getHead().getMsgLength();
+            int length = msg.getHead().getMsgLength() + headLength;
             byte[] bytes = new byte[length];
             // 获取信号列表
             Collection<Signal> signalCollection = msg.getSignalMap().values();
@@ -59,6 +62,8 @@ public class DataConvert {
                     msg.setSignalValue(sig.getSignalName(), sig.getDefaultValue());
                 }
             }
+            // 添加报文ID
+            ByteUtil.setBits(bytes, Integer.parseInt(msg.getHead().getMsgID(), 16),0, (length - 1) * 8, 16, Motorola);
             return bytes;
         }
     }
