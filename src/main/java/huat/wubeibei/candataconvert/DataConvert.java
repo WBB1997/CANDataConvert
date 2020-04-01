@@ -77,7 +77,7 @@ public class DataConvert {
             for (Signal sig : signalCollection) {
                 double value = sig.getResolution() * ByteUtil.countBit(bytes, 0, sig.getStartBitPosition(), sig.getSignalLength(), sig.getLayoutFormat());
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("msg_id", message.getHead().getMsgID());
+                jsonObject.put("msg_name", message.getHead().getMsgName());
                 jsonObject.put("signal_name", sig.getSignalName());
                 jsonObject.put("value", value);
                 jsonStreamListener.produce(jsonObject.toJSONString());
