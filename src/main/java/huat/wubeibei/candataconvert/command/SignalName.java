@@ -10,6 +10,7 @@ public enum  SignalName {
     BCM_Flg_Stat_HighBeam,
     BCM_Flg_Stat_LowBeam,
     BCM_Flg_Stat_RearFogLamp,
+    BCM_Flg_Stat_FrontFogLamp,
     BCM_Flg_Stat_DangerAlarmLamp,
     BCM_Flg_Stat_BrakeLamp,
     BCM_Flg_Stat_BackupLamp,
