@@ -3,15 +3,12 @@ package huat.wubeibei.candataconvert;
 import com.alibaba.fastjson.JSONObject;
 import huat.wubeibei.candataconvert.modal.Message;
 import huat.wubeibei.candataconvert.modal.Signal;
+import huat.wubeibei.candataconvert.util.ByteUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import huat.wubeibei.candataconvert.util.ByteUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -20,13 +17,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static huat.wubeibei.candataconvert.util.ByteUtil.Intel;
 import static huat.wubeibei.candataconvert.util.ByteUtil.Motorola;
 import static java.util.Arrays.copyOfRange;
 
 public class DataConvert {
 
-    private HashMap<String, Message> messageMap = new HashMap<>();
+    private HashMap<String, Message> MsgNameMap = new HashMap<>();
+    private HashMap<String, Message> MsgIDMap = new HashMap<>();
     private InputStream config;
     private final static int headLength = 2;
 
@@ -40,7 +37,7 @@ public class DataConvert {
     // 获得报文段的字节流，并重置报文段的值(恢复为默认值，如默认值小于零则不恢复)
     // msgID 为报文段的ID
     public byte[] getByte(String msgName) {
-        Message msg = messageMap.get(msgName);
+        Message msg = MsgNameMap.get(msgName);
         if (msg == null)
             return null;
         else {
@@ -75,7 +72,7 @@ public class DataConvert {
             // 从第一个前导0开始一直到结尾截取字符串
             String sampleKey = key.substring(key.indexOf('0'));
             // 报文段
-            Message message = messageMap.get(sampleKey);
+            Message message = MsgIDMap.get(sampleKey);
             Collection<Signal> signalCollection = message.getSignalMap().values();
             for (Signal sig : signalCollection) {
                 double value = sig.getResolution() * ByteUtil.countBit(bytes, 0, sig.getStartBitPosition(), sig.getSignalLength(), sig.getLayoutFormat());
@@ -94,13 +91,13 @@ public class DataConvert {
     // 设置报文的值
     public void setSignalValue(String msgName, String signalName, double value) {
         try {
-            Signal sig = messageMap.get(msgName).getSignalMap().get(signalName);
+            Signal sig = MsgNameMap.get(msgName).getSignalMap().get(signalName);
             int maxValue = sig.getMaxValue();
             int minValue = sig.getMinValue();
             if (value < minValue || value > maxValue)
                 return;
             int realValue = (int) (value / sig.getResolution());
-            messageMap.get(msgName).setSignalValue(signalName, realValue);
+            MsgNameMap.get(msgName).setSignalValue(signalName, realValue);
         } catch (Throwable e) {
             System.out.println("huat.wubeibei.candataconvert.DataConvert: No signal found");
         }
@@ -144,7 +141,8 @@ public class DataConvert {
                 //
                 System.out.println("huat.wubeibei.candataconvert.DataConvert->initMessageMap: " + msg.toString());
                 // 存储报文
-                messageMap.put(msg.getKeyword(), msg);
+                MsgNameMap.put(msg.getKeyword(), msg);
+                MsgIDMap.put(msg.getHead().getMsgID(), msg);
             }
         } catch (DocumentException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
