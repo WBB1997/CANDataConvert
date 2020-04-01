@@ -73,7 +73,7 @@ public class DataConvert {
         try {
             String key = ByteUtil.bytesToHex(copyOfRange(bytes, 8, 10));
             // 从第一个前导0开始一直到结尾截取字符串
-            String sampleKey = key.substring(key.charAt('0'));
+            String sampleKey = key.substring(key.indexOf('0'));
             // 报文段
             Message message = messageMap.get(sampleKey);
             Collection<Signal> signalCollection = message.getSignalMap().values();
