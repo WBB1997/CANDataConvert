@@ -99,7 +99,7 @@ public class DataConvert {
             int realValue = (int) (value / sig.getResolution());
             MsgNameMap.get(msgName).setSignalValue(signalName, realValue);
         } catch (Throwable e) {
-            System.out.println("huat.wubeibei.candataconvert.DataConvert: No signal found");
+            System.out.println("DataConvert: No signal found");
         }
     }
 
