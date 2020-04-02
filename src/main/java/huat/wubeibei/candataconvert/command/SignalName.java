@@ -3,6 +3,8 @@ package huat.wubeibei.candataconvert.command;
 public enum  SignalName {
     VCU_ACWorkingStatus,
     can_state_GearPos,
+    can_RemainKm,
+    BMS_SOC,
     BCM_Dig_Ord_HandLightCtr,
     BCM_Flg_Stat_LeftTurningLamp,
     BCM_Flg_Stat_RightTurningLamp,
